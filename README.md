@@ -1,66 +1,234 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🏥 Elderly Care & Support Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+*A Laravel-based donation and service management system for elderly care homes.*
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📌 **Overview**
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+The **Elderly Care & Support System** is a full Laravel application built to manage day-to-day operations of an elderly home using donor funds.
+It automates:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+* Donation collection
+* Fund allocation
+* Weekly food management
+* Resident service tracking
+* Admin analytics
+* Cost calculation
+* Secure transactions
+* Transparent reporting
 
-## Learning Laravel
+The goal is to ensure that donations are used efficiently to support elderly residents with food, accommodation, hygiene, and events.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 🧩 **Core Features**
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### ⭐ 1. **Donation Management (Laravel + MySQL)**
 
-## Laravel Sponsors
+* Accepts donations from authenticated users
+* Stores donor details, amount, currency, transaction ID
+* Tracks donation status
+* Shows donation history on user profile
+* Uses optimized Eloquent queries to calculate:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+  * Total monthly donations
+  * Top donors
+  * Total revenue
+  * Most donated day
+  * Real-time donation analytics in admin panel
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### ⭐ 2. **Food Menu & Cost Management (7-Day Repeat System)**
 
-## Contributing
+* Admin adds breakfast, lunch, dinner, and daily cost
+* Prevents duplicate day entries using Laravel validation
+* Displays weekly menu to users
+* Calculates:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+  * Total weekly food cost
+  * Cost per resident
+  * Monthly cost projections
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### ⭐ 3. **Elderly Care Service Tracking**
 
-## Security Vulnerabilities
+Donations are mapped to services such as:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+* Accommodation
+* Food distribution
+* Cleaning services
+* Events & activities
+* Healthcare support
 
-## License
+Admin can update and manage all services from dashboard.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+### ⭐ 4. **Admin Dashboard**
+
+Built using Laravel Blade, Eloquent ORM & MySQL analytics.
+
+Displays:
+
+* Total donations
+* This month’s revenue
+* Top 10 donors
+* Weekly food cost
+* Most donated date
+* Donation success / fail ratio
+* Manage users
+* Manage menu
+* Manage donations
+* Full CRUD for services, meals, and donors
+
+---
+
+## 🧠 **Important Laravel Queries Used**
+
+### ✔ Fetch Monthly Revenue
+
+```php
+Donation::selectRaw('MONTH(created_at) as month, SUM(amount) as total')
+    ->groupBy('month')
+    ->get();
+```
+
+### ✔ Get Top Donors
+
+```php
+Donation::orderBy('amount', 'DESC')->take(5)->get();
+```
+
+### ✔ Check Duplicate Day in Food Table
+
+```php
+$exists = Food::where('day', $request->day)->exists();
+```
+
+### ✔ Total Food Cost
+
+```php
+$total = Food::sum('cost');
+```
+
+### ✔ Fetch Latest Donor Info
+
+```php
+Donation::with('user')->latest()->first();
+```
+
+### ✔ Donation Status Summary
+
+```php
+Donation::select('status', DB::raw('COUNT(*) as count'))
+        ->groupBy('status')
+        ->get();
+```
+
+---
+
+## 🔐 **SSLCommerz Payment Gateway Integrated**
+
+* Fully integrated Laravel payment API
+* Handles hosted checkout
+* Donation verification
+* Callback URL support (success/cancel/fail)
+* Stores full transaction logs
+
+---
+
+## 🛠 **Tech Stack**
+
+| Technology         | Purpose               |
+| ------------------ | --------------------- |
+| **Laravel**        | Main framework (MVC)  |
+| **PHP 8+**         | Backend engine        |
+| **MySQL**          | Database & analytics  |
+| **Blade**          | Templating engine     |
+| **Bootstrap**      | UI design             |
+| **Eloquent ORM**   | Database interactions |
+| **SSLCommerz API** | Safe online donations |
+
+---
+
+## 📂 **Project Structure**
+
+```
+app/
+    Http/
+    Models/
+    Controllers/
+resources/
+    views/
+        admin/
+        user/
+routes/
+    web.php
+database/
+    migrations/
+public/
+```
+
+---
+
+## 🚀 Installation
+
+#### 1. Clone the repository
+
+```
+git clone https://github.com/yourusername/elderly-care-and-support
+```
+
+#### 2. Install dependencies
+
+```
+composer install
+npm install && npm run dev
+```
+
+#### 3. Setup environment file
+
+```
+cp .env.example .env
+```
+
+Update database, SSLCommerz keys, APP_URL.
+
+#### 4. Run migrations
+
+```
+php artisan migrate
+```
+
+#### 5. Start development server
+
+```
+php artisan serve
+```
+
+Access the app at:
+
+```
+http://localhost:8000
+```
+
+---
+
+## 📈 **Future Enhancements**
+
+* Mobile app (Flutter / React Native)
+* AI-based food planning
+* Donor analytics using charts
+* Multi-language support
+* Real-time notification system
+
+---
+
+## ❤️ **Purpose of the Project**
+
+This system is developed to improve the management, transparency, and sustainability of elderly care homes.
+It ensures every donation is **properly tracked, calculated, and utilized** to support the people who truly need it.
+
